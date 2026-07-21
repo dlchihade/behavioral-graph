@@ -29,7 +29,8 @@
   .grad-text{background:var(--grad); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; color:var(--violet)}
 
   /* header */
-  header.nav{position:sticky; top:0; z-index:50; background:var(--ink); color:#fff}
+  header.nav{position:sticky; top:0; z-index:50; background:var(--ink); color:#fff; transition:box-shadow .25s ease, background .25s ease}
+  header.nav.scrolled{box-shadow:0 8px 30px -14px rgba(0,0,0,.6)}
   .nav-in{max-width:var(--maxw); margin:0 auto; padding:0 24px; height:72px; display:flex; align-items:center; justify-content:space-between}
   .logo{display:flex; align-items:center; gap:0; font-weight:900; font-size:30px; letter-spacing:-.02em; color:#fff}
   .logo .r{display:inline-block; transform:scaleX(-1); margin-left:1px}
@@ -90,10 +91,11 @@
   .reveal-list{margin-top:18px; display:flex; flex-direction:column; gap:10px}
 
   /* layer / solution */
-  .layer-vis{width:min(460px,90%); margin:28px auto 0; aspect-ratio:1/.86; display:grid; place-items:center; perspective:900px}
-  .layer{width:74%; aspect-ratio:1/1; transform:rotateX(58deg) rotateZ(45deg); background:linear-gradient(160deg,#B9A7F5,#E9E3FB 55%,#F5DCEE); border-radius:8px; box-shadow:0 40px 60px -30px rgba(124,58,237,.45), inset 0 0 0 1px rgba(255,255,255,.5); position:relative}
-  .layer::before,.layer::after{content:""; position:absolute; inset:0; border-radius:8px; background:linear-gradient(160deg,#C9BCF6,#EFE9FC); transform:translateZ(-18px); box-shadow:0 0 0 1px rgba(124,58,237,.12)}
-  .layer::after{transform:translateZ(-36px); opacity:.6}
+  .layer-vis{width:min(420px,88%); margin:30px auto 0; display:grid; place-items:center}
+  .layer-svg{width:100%; height:auto; filter:drop-shadow(0 24px 30px rgba(124,58,237,.24))}
+  .layer-svg .lgrid{stroke:rgba(124,58,237,.30); stroke-width:1; fill:none}
+  .layer-svg .wire{stroke:#C7CDD8; stroke-width:1.2; fill:none}
+  .layer-svg .wire-d{stroke:#D3D8E0; stroke-width:1.2; fill:none; stroke-dasharray:3 4}
 
   /* cards */
   .cards{display:grid; grid-template-columns:repeat(2,1fr); gap:22px; margin-top:40px}
@@ -250,7 +252,24 @@
   <div class="wrap center">
     <div class="eyebrow"><span class="badge">Solution</span></div>
     <h2 style="font-size:clamp(30px,4vw,44px); font-weight:800">Intelligence WeR<br><span class="grad-text">Behavioral AI Layer</span></h2>
-    <div class="layer-vis"><div class="layer"></div></div>
+    <div class="layer-vis">
+      <svg viewBox="0 0 320 300" class="layer-svg" role="img" aria-label="The WeR Behavioral AI Layer sitting atop existing infrastructure">
+        <defs>
+          <linearGradient id="plate" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#CDBFF2"/>
+            <stop offset=".5" stop-color="#ECE8F8"/>
+            <stop offset="1" stop-color="#F7DCEC"/>
+          </linearGradient>
+        </defs>
+        <ellipse cx="160" cy="284" rx="86" ry="13" fill="rgba(124,58,237,.12)"/>
+        <g class="wire-d"><path d="M160,208 L226,238 L160,268 L94,238 Z"/></g>
+        <g class="wire"><path d="M39,134 L94,238"/><path d="M281,134 L226,238"/><path d="M160,194 L160,268"/></g>
+        <path d="M39,118 L160,178 L160,194 L39,134 Z" fill="#9E8DE0"/>
+        <path d="M160,178 L281,118 L281,134 L160,194 Z" fill="#8877D2"/>
+        <path d="M160,58 L281,118 L160,178 L39,118 Z" fill="url(#plate)" stroke="rgba(124,58,237,.3)" stroke-width="1"/>
+        <g class="lgrid"><path d="M120,78 L241,138 M80,98 L201,158 M200,78 L79,138 M240,98 L119,158"/></g>
+      </svg>
+    </div>
     <p class="lede">We deliver Behavioral AI via API. Financial institutions add our Layer to their existing infrastructure — CRM, banking apps, advisory tools — and receive continuous client understanding in return.</p>
     <div style="margin-top:28px"><a class="btn btn-grad" href="#process">Learn more</a></div>
   </div>
@@ -396,6 +415,13 @@
 <script>
 document.getElementById('yr').textContent = new Date().getFullYear();
 
+/* sticky-header shadow on scroll */
+(function(){
+  const hdr=document.querySelector('header.nav');
+  const onScroll=()=>hdr.classList.toggle('scrolled', window.scrollY>8);
+  addEventListener('scroll', onScroll, {passive:true}); onScroll();
+})();
+
 /* ---- lightweight network-graph generator (grey → blue → violet → magenta) ---- */
 const SVGNS="http://www.w3.org/2000/svg";
 function mkNet(svg, opts){
@@ -426,14 +452,47 @@ function mkNet(svg, opts){
     el.setAttribute('fill',c);
     svg.appendChild(el);
   });
+  (opts.avatars||[]).forEach(a=>svg.appendChild(avatarGlyph(a.x,a.y,a.r||11,a.color)));
+}
+// stylised person silhouette (no photos) — head + shoulders inside a ringed disc
+function avatarGlyph(cx,cy,r,ring){
+  const col=ring||'#7C3AED';
+  const g=document.createElementNS(SVGNS,'g');
+  const disc=document.createElementNS(SVGNS,'circle');
+  disc.setAttribute('cx',cx); disc.setAttribute('cy',cy); disc.setAttribute('r',r);
+  disc.setAttribute('fill','#fff'); disc.setAttribute('stroke',col); disc.setAttribute('stroke-width','2');
+  const head=document.createElementNS(SVGNS,'circle');
+  head.setAttribute('cx',cx); head.setAttribute('cy',(cy-r*0.18).toFixed(1)); head.setAttribute('r',(r*0.34).toFixed(1)); head.setAttribute('fill',col);
+  const body=document.createElementNS(SVGNS,'path');
+  body.setAttribute('d',`M${(cx-r*0.55).toFixed(1)},${(cy+r*0.72).toFixed(1)} a${(r*0.55).toFixed(1)},${(r*0.5).toFixed(1)} 0 0 1 ${(r*1.1).toFixed(1)},0 Z`);
+  body.setAttribute('fill',col);
+  g.append(disc,head,body); return g;
+}
+// squashed sphere of dots with a central client avatar
+function mkSphere(svg,opts){
+  const {w=300,h=260,rings=6,seed=9}=opts; let s=seed; const rnd=()=>{s=(s*9301+49297)%233280;return s/233280;};
+  svg.setAttribute('viewBox',`0 0 ${w} ${h}`); while(svg.firstChild)svg.removeChild(svg.firstChild);
+  const cx=w/2, cy=h/2, R=Math.min(w,h)*0.44;
+  for(let ri=1;ri<=rings;ri++){
+    const rad=R*ri/rings, count=5+ri*5;
+    for(let i=0;i<count;i++){
+      const a=(i/count)*Math.PI*2 + rnd()*0.5;
+      const x=cx+Math.cos(a)*rad, y=cy+Math.sin(a)*rad*0.64;
+      const dot=document.createElementNS(SVGNS,'circle');
+      dot.setAttribute('cx',x.toFixed(1)); dot.setAttribute('cy',y.toFixed(1)); dot.setAttribute('r',(0.7+rnd()*1.9).toFixed(1));
+      dot.setAttribute('fill', ri<3?'#A9C0F0':'#6E8FE0'); dot.setAttribute('opacity',(0.35+rnd()*0.5).toFixed(2));
+      svg.appendChild(dot);
+    }
+  }
+  svg.appendChild(avatarGlyph(cx,cy,15,'#3B7BEA'));
 }
 const GREY=['#C2C8D2','#B7BEC9','#AEB6C2'];
 const FLOW=['#B7BEC9','#8CA0D8','#5C6FE0','#7C3AED','#C026D3'];
 mkNet(document.getElementById('heroNet'),{w:520,h:900,n:34,seed:7,palette:FLOW});
 mkNet(document.getElementById('revealNet'),{w:520,h:640,n:40,seed:13,palette:['#C2C8D2','#AEB6C2','#8CA0D8','#6D4AE0','#7C3AED','#C026D3']});
-mkNet(document.getElementById('t1'),{w:300,h:260,n:20,seed:3,palette:GREY});
-mkNet(document.getElementById('t2'),{w:300,h:260,n:44,seed:21,palette:['#BFD0F2','#9BB6EC','#7FA3E8']});
-mkNet(document.getElementById('t3'),{w:300,h:260,n:22,seed:31,palette:FLOW});
+mkNet(document.getElementById('t1'),{w:300,h:260,n:20,seed:3,palette:GREY, avatars:[{x:150,y:118,r:12,color:'#9AA3B2'}]});
+mkSphere(document.getElementById('t2'),{w:300,h:260,rings:6,seed:21});
+mkNet(document.getElementById('t3'),{w:300,h:260,n:22,seed:31,palette:FLOW, avatars:[{x:118,y:92,r:11,color:'#7C3AED'},{x:205,y:172,r:11,color:'#C026D3'},{x:232,y:74,r:10,color:'#3B7BEA'}]});
 
 /* ---- scroll-reveal (motion-safe; no-op when JS off or reduced-motion) ---- */
 (function(){
