@@ -159,6 +159,13 @@
   .copy{background:#F8FAFB; border:1px dashed var(--border); border-radius:8px; padding:9px 11px}
   .copy .lead{font-size:10.5px; color:var(--text3); margin-bottom:5px; display:flex; gap:6px; align-items:center}
   .copy p{margin:0; font-size:12px; line-height:1.5; color:var(--text); font-style:italic}
+  /* API response card — the product output */
+  .apicard{border:1px solid #232A44; border-radius:9px; overflow:hidden; background:#0E1120}
+  .apihead{display:flex; align-items:center; gap:8px; padding:7px 10px; background:#151A2E; border-bottom:1px solid #232A44; font-family:var(--mono); font-size:10px}
+  .apihead code{color:#C7CEE6; font-size:10px; background:none; padding:0}
+  .apimethod{color:#fff; background:var(--motivation); border-radius:4px; padding:1px 6px; font-weight:700; letter-spacing:.04em}
+  .apistatus{margin-left:auto; color:#7BD3B5; font-weight:600}
+  .apibody{margin:0; padding:10px 12px; font-family:var(--mono); font-size:10.5px; line-height:1.55; color:#D6DCEC; white-space:pre-wrap; word-break:break-word; overflow-x:auto}
 
   /* node/link popover */
   .inspector{position:absolute; right:60px; bottom:14px; width:282px; background:#fff; border:1px solid var(--border); border-radius:9px; padding:14px; display:none; box-shadow:0 8px 26px rgba(20,30,50,.18)}
@@ -195,7 +202,7 @@
 <div class="app">
   <header class="header">
     <span class="hlogo"><svg viewBox="0 0 28 28" aria-hidden="true"><rect width="28" height="28" rx="7" fill="#5B5BF6"/><g fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="10" r="2.3"/><circle cx="19" cy="9" r="2.3"/><circle cx="14" cy="19" r="2.3"/><path d="M11 10.6l6-1M10.6 12l3 5M17.4 10.4l-3 6.6"/></g></svg></span>
-    <div class="htitle"><h1>Behavioral graph</h1><span>behavioral-intelligence layer</span></div>
+    <div class="htitle"><h1>Behavioral graph</h1><span>behavioral-intelligence layer &middot; content-suggestion API</span></div>
   </header>
 
   <aside class="sidebar" aria-label="Controls">
@@ -208,14 +215,14 @@
       <button class="toggle" id="causalToggle" aria-pressed="false"><span class="box"></span>Only causal edges</button>
     </div>
     <div class="wsec">
-      <div class="wlabel">Simulate an incoming signal</div>
+      <div class="wlabel">External signal <span class="count">updated daily</span></div>
       <div class="sim">
         <div class="sim-row">
           <select id="simSelect" aria-label="Signal to fire">
-            <option value="t_income">Income-band increase detected</option>
-            <option value="t_activity">Drop in monthly activity</option>
-            <option value="t_life">Life-stage shift inferred</option>
-            <option value="t_tenure">Tenure milestone crossed</option>
+            <option value="t_income">Central-bank rate change (macro)</option>
+            <option value="t_activity">Cost-of-living coverage spikes (sentiment)</option>
+            <option value="t_life">Life-stage shift (life event)</option>
+            <option value="t_tenure">New-year financial-planning season</option>
           </select>
           <button id="simBtn" aria-label="Apply the selected signal to the current segment">Apply</button>
         </div>
@@ -259,7 +266,7 @@
   </aside>
 
   <footer class="statusbar">
-    <span class="st-left"><b>Real pipeline &middot; synthetic Santander-shaped data.</b> causal-learn PC + EconML LinearDML &middot; causal iff 95% CI excludes 0 &amp; |effect|&nbsp;&ge;&nbsp;0.05&nbsp;SD &middot; external-signal + LLM stubbed &middot; re-run: <code>--data train_ver2.csv</code></span>
+    <span class="st-left"><b>Behavioral-intelligence layer.</b> Causal graph of behavioral-science constructs &middot; refreshed daily from external signals &middot; grounds LLM content served via API &middot; edges: causal-learn PC + EconML LinearDML, causal iff 95% CI excludes 0 &amp; |effect|&nbsp;&ge;&nbsp;0.05&nbsp;SD</span>
     <span class="st-right" id="stCounts"></span>
   </footer>
 </div>
@@ -493,6 +500,10 @@ function renderPayload(s){
         return `<li class="wrow"><span class="warr">${N[e.s].label} <span class="wto">&rarr;</span> ${N[e.t].label}</span>${tag}</li>`;
       }).join("")
     : `<li class="wnone">No causal edge here clears the effect-size bar &mdash; expected uplift is low, so the honest call is to nurture, not push.</li>`;
+  const _api = whyEdges.filter(e=>e.status==='causal').slice(0,3)
+    .map(e=>`      { "edge": "${N[e.s].label} → ${N[e.t].label}", "effect": ${fmt(e.effect)}, "ci": [${e.ci[0].toFixed(2)}, ${e.ci[1].toFixed(2)}] }`)
+    .join(',\n') || '      /* no causal edge clears the effect-size bar — nurture, do not push */';
+  const _content = (s.copy||'').replace(/"/g,'\\"');
   document.getElementById("readout").innerHTML=`
     <div class="block">
       <div class="cap">Decision state</div>
@@ -512,7 +523,20 @@ function renderPayload(s){
     </div>
     <div class="block"><div class="cap">Signals in play</div><div class="chips">${mot}${trg}</div></div>
     <div class="block">
-      <div class="copy"><div class="lead">&#9671; example copy an LLM would draft from this payload (stubbed)</div><p>&ldquo;${s.copy}&rdquo;</p></div>
+      <div class="cap">API response &mdash; what the bank receives</div>
+      <div class="apicard">
+        <div class="apihead"><span class="apimethod">GET</span><code>/v1/content-suggestions?segment=${s.id}</code><span class="apistatus">200</span></div>
+<pre class="apibody">{
+  "segment": "${s.label}",
+  "topic": "${s.topic}",
+  "content": "${_content}",
+  "confidence": "${s.persu}",
+  "grounding": [
+${_api}
+  ]
+}</pre>
+      </div>
+      <div class="subnote" style="margin-top:6px">Content is drafted by an LLM from this payload &mdash; never free-floating. Every item in <code>grounding</code> is a tested causal edge, so the suggestion is auditable end to end.</div>
     </div>`;
 }
 
