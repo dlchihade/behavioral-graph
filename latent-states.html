@@ -175,8 +175,8 @@
       <div class="mcard">
         <div class="k">Edges · causal + associative</div>
         <h3>Transitions and influence become edges</h3>
-        <p>State-to-state dynamics give directed edges. Associative edges come from co-occurrence and network inference over behavioral sequences (random-walk / U-INVITE-style estimators); causal edges come from causal discovery plus effect estimation, so each carries an effect size and a confidence interval.</p>
-        <div class="maps"><b>transition + effect</b> → directed edge · <b>|effect|≥bar & CI excludes 0</b> → "causal"</div>
+        <p>State-to-state dynamics give directed edges, and co-occurrence over behavioral sequences gives associative ones. An edge only earns the label "causal" when its effect survives a causal test — holding under conditioning — so it carries an effect size and interval rather than a bare correlation.</p>
+        <div class="maps"><b>transition + co-occurrence</b> → edge · <b>effect survives conditioning</b> → "causal"</div>
       </div>
       <div class="mcard">
         <div class="k">Nodes · contextual triggers</div>
@@ -206,22 +206,22 @@
   <div class="wrap">
     <div class="eyebrow"><span class="badge">Where this comes from</span></div>
     <h2 class="big">Grounded in the research</h2>
-    <p class="lede">The methods above aren't hypothetical — they're the through-line of my work on behavior, memory and decision-making.</p>
+    <p class="lede">The state layer is genuinely my research. The causal bar on the edges is the standard I'd hold them to — and what the prototype illustrates.</p>
     <div class="research">
       <div class="rcard">
         <h3>Latent behavioral states</h3>
-        <p>Modeling exploration–exploitation dynamics from sequential behavior, including in decision-making under Parkinson's — recovering the states people occupy and when they switch.</p>
-        <span class="chip">explore / exploit · foraging</span>
+        <p>Estimating the states people move through — exploration versus exploitation, and the shifts between them — from sequential behavior. Recovered from data, not hand-labeled. This is the part I've actually done.</p>
+        <span class="chip">explore / exploit</span>
       </div>
       <div class="rcard">
-        <h3>Networks from behavior</h3>
-        <p>Inferring semantic and behavioral network structure from production sequences — random-walk and U-INVITE-style estimators that turn ordered behavior into a graph.</p>
-        <span class="chip">semantic fluency · network inference</span>
+        <h3>Behavior as search</h3>
+        <p>Semantic foraging treats memory retrieval as movement through a structured space — the conceptual bridge from a stream of behavior to a graph you can reason over.</p>
+        <span class="chip">semantic foraging</span>
       </div>
       <div class="rcard">
-        <h3>Causal, auditable edges</h3>
-        <p>Structure learning and effect estimation so relationships aren't just correlations — every edge is testable, with an effect size and interval that survive conditioning.</p>
-        <span class="chip">causal discovery · effect estimation</span>
+        <h3>A causal bar for edges</h3>
+        <p>An edge only counts as causal when its effect survives conditioning — an effect size with an interval, not a correlation. That's the standard I'd hold the graph to; here it's illustrated, not yet run end to end.</p>
+        <span class="chip">auditable by design</span>
       </div>
     </div>
   </div>
