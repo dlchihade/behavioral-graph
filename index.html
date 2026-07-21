@@ -127,10 +127,12 @@
   /* customers */
   .cust{padding:52px 0; background:#FAFAFC; border-top:1px solid var(--hair); border-bottom:1px solid var(--hair)}
   .cust .lbl{text-align:center; font-size:12px; letter-spacing:.16em; text-transform:uppercase; color:var(--text3); font-weight:700}
-  .cust-row{display:flex; align-items:center; justify-content:center; gap:56px; margin-top:26px; flex-wrap:wrap; opacity:.7}
-  .cust-mark{font-weight:900; font-size:22px; color:#3A4150; letter-spacing:-.01em; display:flex; align-items:center; gap:9px}
-  .cust-mark .mc{display:inline-flex} .cust-mark .mc i{width:22px;height:22px;border-radius:50%;display:inline-block}
-  .cust-mark .mc i:first-child{background:#EB4B31} .cust-mark .mc i:last-child{background:#F79E1B; margin-left:-9px; mix-blend-mode:multiply}
+  .cust-row{display:flex; align-items:center; justify-content:center; gap:64px; margin-top:26px; flex-wrap:wrap}
+  .cust-mark{display:inline-flex; align-items:baseline; gap:4px; opacity:.85; transition:opacity .2s}
+  .cust-mark:hover{opacity:1}
+  .cust-mark.llb{font-weight:900; color:#2A2F3A}
+  .cust-mark .llb-mark{font-size:34px; letter-spacing:-.02em; line-height:1}
+  .cust-mark .llb-year{font-size:12px; font-weight:800; color:#8A93A2; letter-spacing:.02em}
 
   /* about / closing */
   .closing{text-align:center}
@@ -327,8 +329,19 @@
 <div class="cust">
   <div class="lbl">Customers</div>
   <div class="cust-row">
-    <span class="cust-mark"><span class="mc"><i></i><i></i></span>mastercard</span>
-    <span class="cust-mark">IIb<sup style="font-size:11px; margin-left:2px">1861</sup></span>
+    <!-- Mastercard — authentic interlocking-circles brand mark -->
+    <span class="cust-mark" aria-label="Mastercard">
+      <svg viewBox="0 0 48 42" width="52" height="46" role="img" aria-label="Mastercard">
+        <circle cx="18" cy="15" r="13" fill="#EB001B"/>
+        <circle cx="30" cy="15" r="13" fill="#F79E1B"/>
+        <path d="M24 4.5a13 13 0 0 0 0 21 13 13 0 0 0 0-21z" fill="#FF5F00"/>
+        <text x="24" y="39" text-anchor="middle" font-family="'Mulish',sans-serif" font-weight="700" font-size="8.5" letter-spacing="-.2" fill="#1A1A1A">mastercard</text>
+      </svg>
+    </span>
+    <!-- LLB — Liechtensteinische Landesbank (est. 1861) -->
+    <span class="cust-mark llb" aria-label="LLB — Liechtensteinische Landesbank, 1861">
+      <span class="llb-mark">LLB</span><span class="llb-year">1861</span>
+    </span>
   </div>
 </div>
 
