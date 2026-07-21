@@ -67,6 +67,12 @@
   .lg-line{flex:none}
 
   :focus-visible{outline:2px solid var(--accent); outline-offset:1px}
+  .sr-only{position:absolute!important; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0}
+  /* keyboard focus on SVG graph elements */
+  .node:focus{outline:none} .node:focus-visible{outline:none}
+  .node:focus-visible circle.core{stroke:var(--accent); stroke-width:3.5}
+  .node:focus-visible .halo{stroke-width:3.5; opacity:.45}
+  .edge.hit:focus{outline:none} .edge.hit:focus-visible{outline:none}
 
   /* clean graph canvas */
   .stage{grid-column:2; grid-row:2; position:relative; min-width:0; min-height:0; overflow:hidden;
@@ -211,7 +217,7 @@
             <option value="t_life">Life-stage shift inferred</option>
             <option value="t_tenure">Tenure milestone crossed</option>
           </select>
-          <button id="simBtn">Apply</button>
+          <button id="simBtn" aria-label="Apply the selected signal to the current segment">Apply</button>
         </div>
       </div>
     </div>
@@ -235,7 +241,8 @@
   </aside>
 
   <section class="stage">
-    <svg id="graph" viewBox="104 60 724 686" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Behavioral graph"></svg>
+    <svg id="graph" viewBox="104 60 724 686" preserveAspectRatio="xMidYMid meet" role="group" aria-roledescription="Interactive causal graph" aria-label="Behavioral graph: contextual triggers, decision states and motivations linked by causal and associative edges" aria-describedby="graphHelp"></svg>
+    <p id="graphHelp" class="sr-only">Tab to move between nodes and edges. Press Enter or Space to inspect the focused item. Press Escape to close the inspector. Selecting a segment on the left updates the Segment detail panel on the right.</p>
     <div class="inspector" id="inspector"></div>
     <div class="zoomctl" role="group" aria-label="View controls">
       <button class="zbtn" id="zIn" title="Zoom in" aria-label="Zoom in">+</button>
@@ -246,7 +253,7 @@
 
   <aside class="detail" aria-label="Segment detail">
     <div class="detail-hd">Segment detail</div>
-    <div class="readout" id="readout">
+    <div class="readout" id="readout" role="region" aria-live="polite" aria-label="Segment detail payload">
       <div class="empty">Select a segment on the left to build its grounding payload &mdash; the recommended topic and the evidence behind it.</div>
     </div>
   </aside>
@@ -339,9 +346,14 @@ edges.forEach(e=>{
   if(e.kind!=="co-holding") vis.setAttribute("marker-end", e.status==="causal"?"url(#ahC)":"url(#ahA)");
   const hit=document.createElementNS(SVGNS,"path");
   hit.setAttribute("d",d); hit.setAttribute("class","edge hit");
+  hit.setAttribute("tabindex","0"); hit.setAttribute("role","button");
+  hit.setAttribute("aria-label",(e.text||(N[e.s].label+" to "+N[e.t].label+", "+e.status+" edge"))+" Activate for details.");
   hit.addEventListener("click",ev=>{ev.stopPropagation(); showEdge(e.id);});
+  hit.addEventListener("keydown",ev=>{ if(ev.key==="Enter"||ev.key===" "){ ev.preventDefault(); ev.stopPropagation(); showEdge(e.id);} });
   hit.addEventListener("mouseenter",()=>vis.classList.add("lit"));
   hit.addEventListener("mouseleave",()=>{ if(!frozen) vis.classList.remove("lit");});
+  hit.addEventListener("focus",()=>vis.classList.add("lit"));
+  hit.addEventListener("blur",()=>{ if(!frozen) vis.classList.remove("lit");});
   gEdges.appendChild(vis); gEdges.appendChild(hit);
   edgeEl[e.id]=vis;
 });
@@ -384,7 +396,11 @@ nodes.forEach(n=>{
     gt.setAttribute("text-anchor","middle"); gt.setAttribute("dominant-baseline","central"); gt.textContent=n._cdeg;
     gl.append(gc,gt); g.appendChild(gl);
   }
+  g.setAttribute("tabindex","0"); g.setAttribute("role","button");
+  const _tn={motivation:"motivation",state:"decision state",trigger:"contextual trigger"}[n.type];
+  g.setAttribute("aria-label", `${n.label}, ${_tn}. ${n._cdeg} causal ${n._cdeg===1?"link":"links"}. Activate to inspect.`);
   g.addEventListener("click",ev=>{ev.stopPropagation(); showNode(n.id);});
+  g.addEventListener("keydown",ev=>{ if(ev.key==="Enter"||ev.key===" "){ ev.preventDefault(); ev.stopPropagation(); showNode(n.id);} });
   gNodes.appendChild(g); nodeEl[n.id]=g;
 });
 
@@ -420,7 +436,7 @@ function litFor(active, activeEdges){
 const segsWrap=document.getElementById("segs");
 segments.forEach(s=>{
   const b=document.createElement("button");
-  b.className="seg"+(s.alert?" alert":""); b.type="button";
+  b.className="seg"+(s.alert?" alert":""); b.type="button"; b.setAttribute("aria-pressed","false");
   b.innerHTML=`${s.label}<small>${s.meta}</small>`;
   b.addEventListener("click",()=>selectSeg(s.id));
   segsWrap.appendChild(b); s._btn=b;
@@ -447,7 +463,7 @@ function whyEdgesFor(s){
 
 function selectSeg(id){
   currentSeg=id; simTriggers=[]; frozen=false; hideInspector();
-  segments.forEach(s=> s._btn.classList.toggle("active", s.id===id));
+  segments.forEach(s=>{ const on=s.id===id; s._btn.classList.toggle("active", on); s._btn.setAttribute("aria-pressed", String(on)); });
   const s=segments.find(x=>x.id===id);
   const {active,eids}=activeSetFor(s);
   litFor(active,eids);
@@ -597,7 +613,7 @@ if(!window.matchMedia("(prefers-reduced-motion: reduce)").matches){
 }
 const EMPTY_HTML = '<div class="empty">Select a segment on the left to build its grounding payload \u2014 the recommended topic and the evidence behind it.</div>';
 function resetView(){ currentSeg=null; simTriggers=[]; frozen=false; hideInspector();
-  segments.forEach(s=> s._btn && s._btn.classList.remove("active"));
+  segments.forEach(s=>{ if(s._btn){ s._btn.classList.remove("active"); s._btn.setAttribute("aria-pressed","false"); } });
   nodes.forEach(n=> nodeEl[n.id].classList.remove("dim","lit","pulse"));
   edges.forEach(e=> edgeEl[e.id].classList.remove("dim","lit"));
   document.getElementById("readout").innerHTML = EMPTY_HTML; }
@@ -611,6 +627,17 @@ var _zi=document.getElementById('zIn'), _zo=document.getElementById('zOut'), _zf
 if(_zi) _zi.addEventListener('click',()=>zoomBy(0.85));
 if(_zo) _zo.addEventListener('click',()=>zoomBy(1/0.85));
 if(_zf) _zf.addEventListener('click',()=>{ VB={x:VB0.x,y:VB0.y,w:VB0.w,h:VB0.h}; applyVB(); if(typeof resetView==='function') resetView(); });
+
+/* ---------- a11y: legend list semantics + Escape to close inspector ---------- */
+document.querySelectorAll('.legend .grp').forEach(grp=>{
+  grp.setAttribute('role','list');
+  grp.querySelectorAll('.lg-row').forEach(r=>r.setAttribute('role','listitem'));
+});
+document.addEventListener('keydown',ev=>{
+  if(ev.key==='Escape' && typeof frozen!=='undefined' && frozen){
+    hideInspector(); currentSeg?selectSeg(currentSeg):clearLit();
+  }
+});
 </script>
 </body>
 </html>
