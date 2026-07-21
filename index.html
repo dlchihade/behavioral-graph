@@ -66,7 +66,12 @@
   .hero h1{font-size:clamp(38px,6vw,68px); font-weight:800}
   .hero .sub{margin-top:20px; color:var(--text2); font-size:20px; font-weight:500}
   .hero .cta{margin-top:34px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap}
-  .hero-net{position:absolute; inset:0; z-index:1; pointer-events:none; opacity:.9}
+  .hero-net{position:absolute; left:0; top:0; bottom:0; width:42%; z-index:1; pointer-events:none; opacity:.85; -webkit-mask-image:linear-gradient(90deg,#000 55%,transparent 100%); mask-image:linear-gradient(90deg,#000 55%,transparent 100%)}
+  @media (max-width:760px){ .hero-net{opacity:.4} }
+
+  /* reveal pills (FEEL / THINK / ACT / DECIDE) */
+  .rpills{display:flex; flex-direction:column; align-items:flex-start; gap:9px; margin-top:16px}
+  .rpill{color:#fff; font-size:12px; font-weight:800; letter-spacing:.13em; text-transform:uppercase; padding:6px 18px; border-radius:999px; box-shadow:0 3px 10px -3px rgba(124,58,237,.5)}
 
   /* thin statement band */
   .band{background:linear-gradient(180deg,#FAFAFC 0%, #F4F5F8 100%); border-top:1px solid var(--hair); border-bottom:1px solid var(--hair)}
@@ -76,7 +81,7 @@
 
   /* blindspot / reveal split */
   .split{display:grid; grid-template-columns:1.05fr 1fr; gap:56px; align-items:center}
-  .netbox{position:relative; min-height:360px; border-radius:20px; overflow:hidden}
+  .netbox{position:relative; min-height:440px; border-radius:20px; overflow:hidden}
   .chips{display:flex; flex-wrap:wrap; gap:9px; margin-top:16px}
   .chip{font-size:13px; font-weight:700; letter-spacing:.02em; padding:7px 14px; border-radius:999px; background:#EEF0F4; color:#5A6473; border:1px solid #E4E7EC}
   .chip.mag{background:#FBEBFA; border-color:#F3D0EE; color:#B0299E}
@@ -209,11 +214,11 @@
         <span class="chip">…</span>
       </div>
       <h2 class="grad-text" style="font-size:clamp(24px,3vw,30px); font-weight:800; margin-top:34px">WeR reveals how clients</h2>
-      <div class="chips" style="margin-top:14px">
-        <span class="chip mag">Feel</span>
-        <span class="chip vio">Think</span>
-        <span class="chip blu">Act</span>
-        <span class="chip vio">Decide</span>
+      <div class="rpills">
+        <span class="rpill" style="background:#C026D3">Feel</span>
+        <span class="rpill" style="background:#8B2FD6">Think</span>
+        <span class="rpill" style="background:#6D4AE0">Act</span>
+        <span class="rpill" style="background:#3B7BEA">Decide</span>
       </div>
       <p style="margin-top:22px; color:var(--text2); font-weight:600">… as behavioral prediction of the future.</p>
     </div>
@@ -405,7 +410,7 @@ function mkNet(svg, opts){
 const GREY=['#C2C8D2','#B7BEC9','#AEB6C2'];
 const FLOW=['#B7BEC9','#8CA0D8','#5C6FE0','#7C3AED','#C026D3'];
 mkNet(document.getElementById('heroNet'),{w:520,h:900,n:34,seed:7,palette:FLOW});
-mkNet(document.getElementById('revealNet'),{w:560,h:420,n:30,seed:13,palette:FLOW});
+mkNet(document.getElementById('revealNet'),{w:520,h:640,n:40,seed:13,palette:['#C2C8D2','#AEB6C2','#8CA0D8','#6D4AE0','#7C3AED','#C026D3']});
 mkNet(document.getElementById('t1'),{w:300,h:260,n:20,seed:3,palette:GREY});
 mkNet(document.getElementById('t2'),{w:300,h:260,n:44,seed:21,palette:['#BFD0F2','#9BB6EC','#7FA3E8']});
 mkNet(document.getElementById('t3'),{w:300,h:260,n:22,seed:31,palette:FLOW});
