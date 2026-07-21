@@ -1,6 +1,9 @@
-# Behavioral Graph — prototype
+# WeR — Behavioral AI for Financial Institutions
 
-Interactive causal-graph prototype: contextual triggers → decision states → motivations,
-estimated over synthetic Santander-shaped segment data (causal-learn PC + EconML LinearDML).
+Marketing landing page + live interactive prototype.
 
-Single self-contained `index.html` (fonts inlined, no external requests). Deployed on Netlify.
+- `index.html` — WeR landing page (Behavioral AI Layer, Solution, Technology, Realtime).
+- `graph.html` — interactive Causal Semantic Network prototype (contextual triggers → decision
+  states → motivations, causal-learn PC + EconML LinearDML over synthetic Santander-shaped data).
+
+Self-contained. Mulish via Google Fonts. Deployed on Netlify; pushes to `main` auto-deploy via GitHub Actions.

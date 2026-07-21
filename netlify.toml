@@ -1,7 +1,5 @@
 [build]
   publish = "."
 
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+# Static multi-page site: index.html (landing) + graph.html (interactive prototype).
+# No SPA catch-all — let real files serve directly.
