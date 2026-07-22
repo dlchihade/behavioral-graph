@@ -25,7 +25,7 @@
   *{box-sizing:border-box}
   html,body{margin:0;height:100%}
   body{background:var(--bg); color:var(--text); font-family:var(--sans); font-size:12px; -webkit-font-smoothing:antialiased; overflow:hidden}
-  .app{display:grid; grid-template-columns:280px 1fr 360px; grid-template-rows:52px 1fr 24px; height:100vh}
+  .app{display:grid; grid-template-columns:300px 1fr 360px; grid-template-rows:52px 1fr 24px; height:100vh}
 
   /* header */
   .header{grid-column:1/-1; grid-row:1; display:flex; align-items:center; gap:11px; padding:0 18px; background:var(--panel); border-bottom:1px solid var(--border)}
@@ -36,7 +36,7 @@
 
   /* left controls */
   .sidebar{grid-column:1; grid-row:2; background:var(--sidebar); border-right:1px solid var(--border); display:flex; flex-direction:column; min-height:0; overflow-y:auto}
-  .wsec{padding:8px 12px; border-bottom:1px solid var(--hair)}
+  .wsec{padding:16px 18px; border-bottom:1px solid var(--hair)}
   .wsec.grow{flex:1 0 auto}
   .wlabel{font-size:12.5px; font-weight:700; letter-spacing:-.006em; color:var(--navy); margin-bottom:11px; display:flex; align-items:center; justify-content:space-between}
   .wlabel .count{font-family:var(--mono); font-size:10.5px; font-weight:400; letter-spacing:0}
@@ -56,7 +56,7 @@
   .toggle.on .box{background:var(--accent); border-color:var(--accent)}
   .toggle.on .box::after{content:"";width:4px;height:7px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg) translate(-1px,-1px)}
 
-  select{width:100%; min-width:0; background:#fff; color:var(--text); border:1px solid #D3D8DF; border-radius:7px; padding:7px 9px; font-family:var(--sans); font-size:12.5px; height:32px}
+  select{width:100%; min-width:0; box-sizing:border-box; background:#fff; color:var(--text); border:1px solid #D3D8DF; border-radius:7px; padding:7px 9px; font-family:var(--sans); font-size:12.5px; height:32px}
   .sim-row{display:flex; gap:7px; margin-top:9px; min-width:0}
   .sim button{background:var(--accent); border:1px solid var(--accent); color:#fff; border-radius:4px; padding:0 16px; height:32px; cursor:pointer; font-family:var(--sans); font-size:12px; font-weight:700; white-space:nowrap; box-shadow:none}
   .sim button:hover{background:#4A4AE8; border-color:#4A4AE8}
