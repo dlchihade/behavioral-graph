@@ -312,7 +312,7 @@ const N={}, nodeEl={}, edgeEl={};
 nodes.forEach(n=>N[n.id]=n);
 /* ReGraph-style: degree centrality -> node size + shade; link weight -> thickness */
 const _cs=getComputedStyle(document.documentElement);
-const COL={trigger:(_cs.getPropertyValue('--trigger')||'#7C5CD6').trim(), state:(_cs.getPropertyValue('--state')||'#2E7BEA').trim(), motivation:(_cs.getPropertyValue('--motivation')||'#17A98C').trim()};
+const COL={trigger:(_cs.getPropertyValue('--trigger')||'#111').trim()||'#111', state:(_cs.getPropertyValue('--state')||'#111').trim()||'#111', motivation:(_cs.getPropertyValue('--motivation')||'#111').trim()||'#111'};
 function shade(hex,t){ const v=parseInt(hex.slice(1),16); let r=(v>>16)&255,g=(v>>8)&255,b=v&255;
   r=Math.round(r*(1-t)); g=Math.round(g*(1-t)); b=Math.round(b*(1-t));
   return '#'+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1); }
