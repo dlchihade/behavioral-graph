@@ -612,6 +612,9 @@ ct.addEventListener("click",()=>{
   const on=svg.classList.toggle("causal-only");
   ct.classList.toggle("on",on); ct.setAttribute("aria-pressed",String(on));
 });
+/* default: open with only causal edges shown */
+svg.classList.add("causal-only");
+ct.classList.add("on"); ct.setAttribute("aria-pressed","true");
 
 /* ---------- simulate ---------- */
 document.getElementById("simBtn").addEventListener("click",()=>{
