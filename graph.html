@@ -17,7 +17,7 @@
     --border:#D9D9D9; --border2:#E6E6E6; --hair:#ECECEC;
     --text:#111111; --text2:#6E6E6E; --text3:#8A8A8A;
     --motivation:#17A98C; --state:#2E7BEA; --trigger:#7C5CD6;
-    --causal:#111111; --assoc:#9A9A9A; --null:#C4C4C4;
+    --causal:#E8913C; --assoc:#9A9A9A; --null:#C4C4C4;
     --accent:#111111; --accent-soft:#EFEFEF; --alert:#111111; --navy:#111111;
     --sans:'JetBrains Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace;
     --mono:'JetBrains Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace;
@@ -98,7 +98,7 @@
   /* KeyLines-style nodes: colored disc + white icon + selection halo */
   .node{cursor:pointer}
   .node .halo{fill:none; stroke:currentColor; stroke-width:0; opacity:0; transition:opacity .2s ease, stroke-width .2s ease}
-  .node circle.core{fill:#fff !important; stroke:#111; stroke-width:1.5; filter:none; transition:transform .26s ease; transform-box:fill-box; transform-origin:center}
+  .node circle.core{stroke:#fff; stroke-width:2; filter:none; transition:transform .26s ease; transform-box:fill-box; transform-origin:center}
   .node .icon{pointer-events:none}
   .node text.lbl{font-size:11px; fill:var(--text); text-anchor:middle; font-weight:600; pointer-events:none}
   .node text.sub{font-family:var(--mono); font-size:8.5px; fill:var(--text3); text-anchor:middle; pointer-events:none; opacity:0; transition:opacity .15s ease}
@@ -370,9 +370,9 @@ edges.forEach(e=>{
 });
 
 const ICONS={
-  trigger:'<path d="M13 3 5 13h5l-1 8 8-11h-5l1-7z" fill="#111"/>',
-  state:'<circle cx="12" cy="12" r="7.5" fill="none" stroke="#111" stroke-width="2"/><path d="M12 7.4l2.5 6.4-6.4-2.5z" fill="#111"/>',
-  motivation:'<circle cx="12" cy="12" r="7.5" fill="none" stroke="#111" stroke-width="2"/><circle cx="12" cy="12" r="2.6" fill="#111"/>'
+  trigger:'<path d="M13 3 5 13h5l-1 8 8-11h-5l1-7z" fill="#fff"/>',
+  state:'<circle cx="12" cy="12" r="7.5" fill="none" stroke="#fff" stroke-width="2"/><path d="M12 7.4l2.5 6.4-6.4-2.5z" fill="#fff"/>',
+  motivation:'<circle cx="12" cy="12" r="7.5" fill="none" stroke="#fff" stroke-width="2"/><circle cx="12" cy="12" r="2.6" fill="#fff"/>'
 };
 function svgFrag(str){
   const doc=new DOMParser().parseFromString('<svg xmlns="http://www.w3.org/2000/svg">'+str+'</svg>','image/svg+xml');
@@ -417,7 +417,7 @@ nodes.forEach(n=>{
 
 /* column headers — the left-to-right causal flow: context -> decision -> expressed need */
 (()=>{ const cg=document.createElementNS(SVGNS,"g");
-  [["Contextual triggers",170],["Decision states",471],["Motivations",772]].forEach(([t,x])=>{
+  [["Contextual triggers",220],["Decision states",720],["Motivations",1220]].forEach(([t,x])=>{
     const el=document.createElementNS(SVGNS,"text");
     el.setAttribute("class","col-head"); el.setAttribute("x",x); el.setAttribute("y",74); el.setAttribute("text-anchor","middle");
     el.textContent=t; cg.appendChild(el);
