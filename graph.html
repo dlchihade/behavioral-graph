@@ -98,7 +98,8 @@
   .node circle.core{stroke:rgba(18,28,45,.12); stroke-width:1; filter:drop-shadow(0 2px 3px rgba(20,30,50,.20)); transition:transform .26s ease, filter .26s ease; transform-box:fill-box; transform-origin:center}
   .node .icon{pointer-events:none}
   .node text.lbl{font-size:11px; fill:var(--text); text-anchor:middle; font-weight:600; pointer-events:none}
-  .node text.sub{font-family:var(--mono); font-size:8.5px; fill:var(--text3); text-anchor:middle; pointer-events:none}
+  .node text.sub{font-family:var(--mono); font-size:8.5px; fill:var(--text3); text-anchor:middle; pointer-events:none; opacity:0; transition:opacity .15s ease}
+  .node.lit text.sub, .node:hover text.sub{opacity:1}
   .node.dim{opacity:.22; transition:opacity .3s ease}
   .node.lit .halo{stroke-width:3.5; opacity:.4}
   .node.lit circle.core{filter:drop-shadow(0 2px 7px rgba(20,30,50,.34))}
@@ -266,7 +267,7 @@
   </aside>
 
   <footer class="statusbar">
-    <span class="st-left"><b>Behavioral-intelligence layer.</b> Causal graph of behavioral-science constructs &middot; refreshed daily from external signals &middot; grounds LLM content served via API &middot; illustrative demo &mdash; edges shown with effect + interval to convey the causal, auditable standard (figures are synthetic)</span>
+    <span class="st-left"><b>Behavioral-intelligence layer.</b> Causal graph of behavioral-science constructs &middot; refreshed daily from external signals &middot; grounds LLM content served via API &middot; illustrative demo, edges shown with effect + interval to convey the causal, auditable standard (figures are synthetic)</span>
     <span class="st-right" id="stCounts"></span>
   </footer>
 </div>
